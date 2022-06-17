@@ -1,1 +1,1 @@
-# -awesome-sticky-notes
+# awesome-sticky-notes
