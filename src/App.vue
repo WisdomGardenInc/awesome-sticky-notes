@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useLocalStorage } from '@vueuse/core'
+
+//@ts-ignore
 import VueDragResize from 'vue-drag-resize-2'
 
 interface Position {
@@ -25,7 +27,7 @@ const newNote = () => {
   notes.value.push(new Note())
 }
 
-const onDragstop = (position: Position, note: any) => {
+const onDragstop = (position: Position, note: Note) => {
   note.position = position
 }
 
