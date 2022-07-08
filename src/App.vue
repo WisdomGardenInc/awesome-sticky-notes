@@ -15,7 +15,7 @@ interface Position {
 class Note {
   public content = ''
   public ts = 0;
-  public position: Position = { left: 50, top: 50, width: 100, height: 100 }
+  public position: Position = { left: 50, top: 50, width: 200, height: 200 }
   constructor() {
     this.ts = new Date().getTime()
   }
@@ -37,8 +37,12 @@ useLocalStorage('notes', notes)
 
 <template>
   <button @click="newNote">+</button>
-  <VueDragResize v-for="note in notes" :key="note.ts" :x="note.position.left" :y="note.position.top"
-    @dragstop="onDragstop($event, note)" dragHandle=".drag" class="bg-yellow-200">
+  <VueDragResize v-for="note in notes" :key="note.ts" 
+    :x="note.position.left" :y="note.position.top"
+    :w="note.position.width" :h="note.position.height"
+    @dragstop="onDragstop($event, note)"
+    @resizestop="onDragstop($event, note)"
+    dragHandle=".drag" class="bg-yellow-200">
     <div class="drag w-full h-4 bg-light-800"></div>
     <textarea class="w-full h-full" v-model="note.content"></textarea>
   </VueDragResize>
