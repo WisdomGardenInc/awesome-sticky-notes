@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import VueDragResize from 'vue-drag-resize'
+import VueDragResize from 'vue-drag-resize-2'
 </script>
 
 <template>
-  <VueDragResize :isActive="true" dragHandle=".drag">
-    <button class="drag">title</button>
-    <div>test</div>
+  <VueDragResize  dragHandle=".drag">
+    <div class="drag w-full h-4 bg-light-800" ></div>
+    <textarea name="" id="" class="w-full h-full"></textarea>
   </VueDragResize>
 </template>
 
-<style>
+<style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -17,5 +17,13 @@ import VueDragResize from 'vue-drag-resize'
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+:deep(.content-container) {
+  display: flex;
+  flex-direction: column;
+}
+:deep(.content-box) {
+  box-sizing: border-box;
 }
 </style>
