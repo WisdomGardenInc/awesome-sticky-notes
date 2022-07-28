@@ -44,7 +44,7 @@ useLocalStorage('notes', notes)
   <button @click="newNote">+</button>
   <VueDragResize v-for="note in notes" :key="note.ts" :x="note.position.left" :y="note.position.top"
     :w="note.position.width" :h="note.position.height" @dragstop="onDragstop($event, note)"
-    @resizestop="onDragstop($event, note)" @dblclick="deleteNote(note)" dragHandle=".drag" class="bg-yellow-200">
+    @resizestop="onDragstop($event, note)" dragHandle=".drag" class="bg-yellow-200">
     <div class="drag w-full bg-light-800 flex justify-between p-1">
       <div class=""></div>
       <div class="i-mdi:close cursor-pointer delete-note" @click="deleteNote(note)"></div>
