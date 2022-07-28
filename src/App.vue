@@ -27,6 +27,11 @@ const newNote = () => {
   notes.value.push(new Note())
 }
 
+const deleteNote = (note: Note) => {
+  let noteIndex = notes.value.indexOf(note)
+  notes.value.splice(noteIndex, 1);
+}
+
 const onDragstop = (position: Position, note: Note) => {
   note.position = position
 }
@@ -37,11 +42,12 @@ useLocalStorage('notes', notes)
 
 <template>
   <button @click="newNote">+</button>
-  <VueDragResize v-for="note in notes" :key="note.ts" 
+  <VueDragResize v-for="note in notes" :key="note.ts"
     :x="note.position.left" :y="note.position.top"
     :w="note.position.width" :h="note.position.height"
     @dragstop="onDragstop($event, note)"
     @resizestop="onDragstop($event, note)"
+    @dblclick="deleteNote(note)"
     dragHandle=".drag" class="bg-yellow-200">
     <div class="drag w-full h-4 bg-light-800"></div>
     <textarea class="w-full h-full" v-model="note.content"></textarea>
