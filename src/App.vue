@@ -42,19 +42,35 @@ useLocalStorage('notes', notes)
 
 <template>
   <button @click="newNote">+</button>
-  <VueDragResize v-for="note in notes" :key="note.ts"
-    :x="note.position.left" :y="note.position.top"
-    :w="note.position.width" :h="note.position.height"
-    @dragstop="onDragstop($event, note)"
-    @resizestop="onDragstop($event, note)"
-    @dblclick="deleteNote(note)"
-    dragHandle=".drag" class="bg-yellow-200">
-    <div class="drag w-full h-4 bg-light-800"></div>
+  <VueDragResize v-for="note in notes" :key="note.ts" :x="note.position.left" :y="note.position.top"
+    :w="note.position.width" :h="note.position.height" @dragstop="onDragstop($event, note)"
+    @resizestop="onDragstop($event, note)" @dblclick="deleteNote(note)" dragHandle=".drag" class="bg-yellow-200">
+    <div class="drag w-full bg-light-800 flex justify-between p-1">
+      <div class=""></div>
+      <div class="i-mdi:close cursor-pointer delete-note" @click="deleteNote(note)"></div>
+    </div>
     <textarea class="w-full h-full" v-model="note.content"></textarea>
   </VueDragResize>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+* {
+  box-sizing: border-box
+}
+
+.drag {
+  .delete-note {
+    visibility: hidden;
+  }
+
+  &:hover {
+    .delete-note {
+      visibility: visible;
+    }
+  }
+}
+
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
