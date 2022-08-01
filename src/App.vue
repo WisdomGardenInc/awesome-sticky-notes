@@ -65,7 +65,6 @@ useLocalStorage("notes", notes);
 		:z="note.zIndex"
 		@dragstop="onDragstop($event, note)"
 		@resizestop="onDragstop($event, note)"
-		@dblclick="deleteNote(note)"
 		@click="changeIndex(note)"
 		dragHandle=".drag"
 		class="bg-yellow-200"
