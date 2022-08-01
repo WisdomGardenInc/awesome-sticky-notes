@@ -67,7 +67,7 @@ useLocalStorage("notes", notes);
 		@resizestop="onDragstop($event, note)"
 		@click="changeIndex(note)"
 		dragHandle=".drag"
-		class="bg-yellow-200"
+		class="bg-yellow-200 border border-amber"
 	>
 		<div class="drag w-full bg-light-800 flex justify-between p-1">
 			<div class=""></div>
