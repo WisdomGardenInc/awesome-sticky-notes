@@ -36,26 +36,44 @@ const onDragstop = (position: Position, note: Note) => {
   note.position = position
 }
 
+const newNoteWithPosition = (e) => {
+  let note = new Note()
+  note.position = { left: e.x, top: e.y, width: 200, height: 200 }
+  notes.value.push(note);
+}
+
 useLocalStorage('notes', notes)
 
 </script>
 
 <template>
-  <button @click="newNote">+</button>
-  <VueDragResize v-for="note in notes" :key="note.ts" :x="note.position.left" :y="note.position.top"
-    :w="note.position.width" :h="note.position.height" @dragstop="onDragstop($event, note)"
-    @resizestop="onDragstop($event, note)" dragHandle=".drag" class="bg-yellow-200">
-    <div class="drag w-full bg-light-800 flex justify-between p-1">
-      <div class=""></div>
-      <div class="i-mdi:close cursor-pointer delete-note" @click="deleteNote(note)"></div>
-    </div>
-    <textarea class="w-full h-full" v-model="note.content"></textarea>
-  </VueDragResize>
+  <div class="bg" @dblclick="newNoteWithPosition($event)">
+    <button class="add-button" @click="newNote">+</button>
+    <VueDragResize v-for="note in notes" :key="note.ts" :x="note.position.left" :y="note.position.top"
+      :w="note.position.width" :h="note.position.height" @dragstop="onDragstop($event, note)"
+      @resizestop="onDragstop($event, note)" dragHandle=".drag" class="bg-yellow-200">
+      <div class="drag w-full bg-light-800 flex justify-between p-1">
+        <div class=""></div>
+        <div class="i-mdi:close cursor-pointer delete-note" @click="deleteNote(note)"></div>
+      </div>
+      <textarea class="w-full h-full" v-model="note.content"></textarea>
+    </VueDragResize>
+  </div>
 </template>
 
 <style scoped lang="scss">
 * {
   box-sizing: border-box
+}
+
+.bg {
+  height: 100%;
+
+  .add-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
 }
 
 .drag {
@@ -68,16 +86,6 @@ useLocalStorage('notes', notes)
       visibility: visible;
     }
   }
-}
-
-
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 
 textarea {
