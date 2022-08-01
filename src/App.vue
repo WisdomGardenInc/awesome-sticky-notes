@@ -46,10 +46,6 @@ const changeIndex = (note: Note) => {
   note.zIndex = 1;
 };
 
-const getClassByIndex = (note: Note) => {
-  return {};
-};
-
 useLocalStorage("notes", notes);
 </script>
 
