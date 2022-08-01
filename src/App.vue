@@ -36,7 +36,7 @@ const onDragstop = (position: Position, note: Note) => {
   note.position = position
 }
 
-const newNoteWithPosition = (e) => {
+const newNoteWithPosition = (e: MouseEvent) => {
   let note = new Note()
   note.position = { left: e.x, top: e.y, width: 200, height: 200 }
   notes.value.push(note);
