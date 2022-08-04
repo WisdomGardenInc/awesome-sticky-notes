@@ -16,17 +16,12 @@ class Note {
   public content = "";
   public ts = 0;
   public position: Position = { left: 50, top: 50, width: 200, height: 200 };
-  public zIndex = 0;
   constructor() {
     this.ts = new Date().getTime();
   }
 }
 
 const notes = ref<Note[]>([new Note()]);
-
-const newNote = () => {
-  notes.value.push(new Note());
-};
 
 const deleteNote = (note: Note) => {
   let noteIndex = notes.value.indexOf(note);
@@ -37,15 +32,6 @@ const onDragstop = (position: Position, note: Note) => {
   note.position = position;
 };
 
-const changeIndex = (note: Note) => {
-  notes.value.forEach((note: Note) => {
-    if (note.zIndex > 0) {
-      note.zIndex = 0;
-    }
-  });
-  note.zIndex = 1;
-};
-
 const newNoteWithPosition = (e: MouseEvent) => {
   let note = new Note();
   note.position = { left: e.x, top: e.y, width: 200, height: 200 };
@@ -54,12 +40,16 @@ const newNoteWithPosition = (e: MouseEvent) => {
 
 useLocalStorage("notes", notes);
 
+const changeIndex = (note: Note) => {
+  deleteNote(note);
+  notes.value.push(note);
+};
+
 useLocalStorage("notes", notes);
 </script>
 
 <template>
   <div class="bg" @dblclick.self="newNoteWithPosition($event)">
-    <button class="add-button" @click="newNote">+</button>
     <VueDragResize
       v-for="note in notes"
       :key="note.ts"
@@ -67,12 +57,11 @@ useLocalStorage("notes", notes);
       :y="note.position.top"
       :w="note.position.width"
       :h="note.position.height"
-      :z="note.zIndex"
       @dragstop="onDragstop($event, note)"
       @resizestop="onDragstop($event, note)"
-      @click="changeIndex(note)"
+      @mousedown="changeIndex(note)"
       dragHandle=".drag"
-      class="bg-yellow-200"
+      class="bg-yellow-200 border border-amber"
     >
       <div class="drag w-full bg-light-800 flex justify-between p-1">
         <div class=""></div>
@@ -90,12 +79,6 @@ useLocalStorage("notes", notes);
 
 .bg {
   height: 100%;
-
-  .add-button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-  }
 }
 
 .drag {
@@ -110,16 +93,7 @@ useLocalStorage("notes", notes);
   }
 }
 
-<<<<<<< HEAD #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-=======>>>>>>>upstream/master textarea {
+textarea {
   box-sizing: border-box;
   border: none;
   background: transparent;
