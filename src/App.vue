@@ -1,40 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useLocalStorage } from '@vueuse/core'
+import { ref } from "vue";
+import { useLocalStorage } from "@vueuse/core";
 
 //@ts-ignore
-import VueDragResize from 'vue-drag-resize-2'
+import VueDragResize from "vue-drag-resize-2";
 
 interface Position {
-  left: Number, //the X position of the component
-  top: Number, //the Y position of the component
-  width: Number, //the width of the component
-  height: Number //the height of the component
+  left: Number; //the X position of the component
+  top: Number; //the Y position of the component
+  width: Number; //the width of the component
+  height: Number; //the height of the component
 }
 
 class Note {
-  public content = ''
+  public content = "";
   public ts = 0;
-  public position: Position = { left: 50, top: 50, width: 200, height: 200 }
+  public position: Position = { left: 50, top: 50, width: 200, height: 200 };
   constructor() {
-    this.ts = new Date().getTime()
+    this.ts = new Date().getTime();
   }
 }
 
-const notes = ref<Note[]>([new Note()])
-
-const newNote = () => {
-  notes.value.push(new Note())
-}
+const notes = ref<Note[]>([new Note()]);
 
 const deleteNote = (note: Note) => {
-  let noteIndex = notes.value.indexOf(note)
+  let noteIndex = notes.value.indexOf(note);
   notes.value.splice(noteIndex, 1);
-}
+};
 
 const onDragstop = (position: Position, note: Note) => {
-  note.position = position
-}
+  note.position = position;
+};
 
 const newNoteWithPosition = (e: MouseEvent) => {
   let note = new Note()
@@ -44,14 +40,20 @@ const newNoteWithPosition = (e: MouseEvent) => {
 
 useLocalStorage('notes', notes)
 
+const changeIndex = (note: Note) => {
+  deleteNote(note)
+  notes.value.push(note)
+};
+
+useLocalStorage("notes", notes);
 </script>
 
 <template>
   <div class="bg" @dblclick.self="newNoteWithPosition($event)">
-    <button class="add-button" @click="newNote">+</button>
     <VueDragResize v-for="note in notes" :key="note.ts" :x="note.position.left" :y="note.position.top"
       :w="note.position.width" :h="note.position.height" @dragstop="onDragstop($event, note)"
-      @resizestop="onDragstop($event, note)" dragHandle=".drag" class="bg-yellow-200">
+      @resizestop="onDragstop($event, note)" @mousedown="changeIndex(note)" dragHandle=".drag"
+      class="bg-yellow-200 border border-amber">
       <div class="drag w-full bg-light-800 flex justify-between p-1">
         <div class=""></div>
         <div class="i-mdi:close cursor-pointer delete-note" @click="deleteNote(note)"></div>
@@ -63,17 +65,11 @@ useLocalStorage('notes', notes)
 
 <style scoped lang="scss">
 * {
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 
 .bg {
   height: 100%;
-
-  .add-button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-  }
 }
 
 .drag {
