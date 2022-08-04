@@ -47,7 +47,7 @@ useLocalStorage('notes', notes)
 </script>
 
 <template>
-  <div class="bg" @dblclick="newNoteWithPosition($event)">
+  <div class="bg" @dblclick.self="newNoteWithPosition($event)">
     <button class="add-button" @click="newNote">+</button>
     <VueDragResize v-for="note in notes" :key="note.ts" :x="note.position.left" :y="note.position.top"
       :w="note.position.width" :h="note.position.height" @dragstop="onDragstop($event, note)"
