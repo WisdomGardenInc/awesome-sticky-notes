@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useLocalStorage } from "@vueuse/core";
+import introJs from "intro.js";
 
 //@ts-ignore
 import VueDragResize from "vue-drag-resize-2";
@@ -46,12 +47,40 @@ const changeIndex = (note: Note) => {
 };
 
 useLocalStorage("notes", notes);
+
+const background = ref(null);
+const noteContainers = ref<any>([]);
+
+const getIntroOptions = () => {
+  return {
+    steps: [
+      {
+        element: background.value,
+        title: "Welcome",
+        intro: "Hello World! 👋",
+      },
+      {
+        element: noteContainers.value[0].$el,
+        intro: "This step focuses on an image",
+      },
+    ],
+  };
+};
+
+onMounted(() => {
+  introJs().setOptions(getIntroOptions()).start();
+});
 </script>
 
 <template>
-  <div class="bg" @dblclick.self="newNoteWithPosition($event)">
+  <div class="bg" @dblclick.self="newNoteWithPosition($event)" ref="background">
     <VueDragResize
       v-for="note in notes"
+      :ref="
+        (el) => {
+          if (el) noteContainers.unshift(el);
+        }
+      "
       :key="note.ts"
       :x="note.position.left"
       :y="note.position.top"
@@ -61,7 +90,7 @@ useLocalStorage("notes", notes);
       @resizestop="onDragstop($event, note)"
       @mousedown="changeIndex(note)"
       dragHandle=".drag"
-      class="bg-yellow-200 border border-amber"
+      class="bg-yellow-200 border border-amber notes"
     >
       <div class="drag w-full bg-light-800 flex justify-between p-1">
         <div class=""></div>

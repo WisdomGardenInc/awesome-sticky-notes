@@ -1,3 +1,4 @@
+@import "intro.js/introjs.css";
 html,
 body {
   margin: 0;
@@ -8,7 +9,8 @@ body {
   height: 100%;
 }
 
-html,body,
+html,
+body,
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

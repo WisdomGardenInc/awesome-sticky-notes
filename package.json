@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^8.9.1",
+    "intro.js": "^6.0.0",
     "vue": "^3.2.25",
     "vue-drag-resize-2": "^3.0.1"
   },
