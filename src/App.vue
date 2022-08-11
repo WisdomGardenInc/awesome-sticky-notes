@@ -48,32 +48,56 @@ const changeIndex = (note: Note) => {
 
 useLocalStorage("notes", notes);
 
-const background = ref(null);
 const noteContainers = ref<any>([]);
 
 const getIntroOptions = () => {
   return {
+    prevLabel: "上一步",
+    nextLabel: "下一步",
+    doneLabel: "好的",
     steps: [
       {
-        element: background.value,
-        title: "Welcome",
-        intro: "Hello World! 👋",
+        element: ".bg",
+        intro: "双击空白区域可新建便签",
       },
       {
         element: noteContainers.value[0].$el,
-        intro: "This step focuses on an image",
+        title: "在这里,你可以...",
+        intro: "记录任何你想记录的内容!",
+      },
+      {
+        element: ".tooltip",
+        intro: "如果你忘记了,可以点击这里重新查看",
+      },
+      {
+        intro: "Have Fun!",
       },
     ],
   };
 };
 
+const endIntro = ref<boolean>(false);
+
+const completeIntro = () => {
+  endIntro.value = true;
+};
+
+useLocalStorage("endIntro", endIntro);
+
+const startIntro = () => {
+  introJs().setOptions(getIntroOptions()).onexit(completeIntro).start();
+};
+
 onMounted(() => {
-  introJs().setOptions(getIntroOptions()).start();
+  if (!endIntro.value) {
+    startIntro();
+  }
 });
 </script>
 
 <template>
-  <div class="bg" @dblclick.self="newNoteWithPosition($event)" ref="background">
+  <div class="bg" @dblclick.self="newNoteWithPosition($event)">
+    <div class="i-mdi:alert-circle-outline p-3 ma-2 float-right tooltip" @click="startIntro"></div>
     <VueDragResize
       v-for="note in notes"
       :ref="
