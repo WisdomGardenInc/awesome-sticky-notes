@@ -48,7 +48,7 @@ const changeIndex = (note: Note) => {
 useLocalStorage("notes", notes);
 
 const getHtml = (note: Note) => {
-  return note.content.replace('<', '&lt;').replace(/(https?:\/\/\S+)/g, "<a target='_blank' href='$1'>$1</a>")
+  return note.content.replaceAll('<', '&lt;').replace(/(https?:\/\/[^\s'"]+)/g, "<a target='_blank' href='$1'>$1</a>")
 }
 
 
