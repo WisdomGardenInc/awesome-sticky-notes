@@ -4,6 +4,7 @@ import { useLocalStorage } from "@vueuse/core";
 import { useKeyModifier } from '@vueuse/core'
 //@ts-expect-error no type
 import VueDragResize from "vue-drag-resize-2";
+import { computed } from "vue";
 
 interface Position {
   left: number; //the X position of the component
@@ -50,7 +51,10 @@ const getHtml = (note: Note) => {
   return note.content.replace('<', '&lt;').replace(/(https?:\/\/\S+)/g, "<a target='_blank' href='$1'>$1</a>")
 }
 
-const cmdPressed =  useKeyModifier('Meta')
+
+const meta = useKeyModifier('Meta')
+const shift = useKeyModifier('Shift')
+const keyPressed = computed(()=> meta.value && shift.value)
 
 const textarea = ref<HTMLElement[]>([]);
 const htmlContainer = ref<HTMLElement[]>([]);
@@ -85,13 +89,13 @@ const htmlContainer = ref<HTMLElement[]>([]);
         />
       </div>
       <div
-        v-show="cmdPressed"
+        v-show="keyPressed"
         ref="htmlContainer"
         class="htmlContainer"
         v-html="getHtml(note)"
       />
       <textarea
-        v-show="!cmdPressed"
+        v-show="!keyPressed"
         ref="textarea"
         v-model="note.content"
         class="w-full h-full"
