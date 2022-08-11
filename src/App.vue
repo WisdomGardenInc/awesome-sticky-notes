@@ -66,10 +66,6 @@ const getIntroOptions = () => {
         intro: "记录任何你想记录的内容!",
       },
       {
-        element: ".tooltip",
-        intro: "如果你忘记了,可以点击这里重新查看",
-      },
-      {
         intro: "Have Fun!",
       },
     ],
@@ -97,7 +93,6 @@ onMounted(() => {
 
 <template>
   <div class="bg" @dblclick.self="newNoteWithPosition($event)">
-    <div class="i-mdi:alert-circle-outline p-3 ma-2 float-right tooltip" @click="startIntro"></div>
     <VueDragResize
       v-for="note in notes"
       :ref="
