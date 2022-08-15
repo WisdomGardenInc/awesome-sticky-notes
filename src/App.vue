@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, nextTick } from "vue";
 import { useLocalStorage } from "@vueuse/core";
-import { useKeyModifier } from '@vueuse/core'
+import { useKeyModifier } from '@vueuse/core';
 //@ts-expect-error no type
 import VueDragResize from "vue-drag-resize-2";
 import { computed } from "vue";
@@ -17,6 +17,8 @@ class Note {
   public content = "";
   public ts = 0;
   public position: Position = { left: 50, top: 50, width: 200, height: 200 };
+  public title = "";
+  public editMode = false;
   constructor() {
     this.ts = new Date().getTime();
   }
@@ -59,6 +61,12 @@ const keyPressed = computed(()=> meta.value && shift.value)
 const textarea = ref<HTMLElement[]>([]);
 const htmlContainer = ref<HTMLElement[]>([]);
 
+const titleInputs = ref<HTMLElement[]>([]);
+const startEditingTitle = async (note:Note,index:number):Promise<void> => {
+  note.editMode = true;
+  await nextTick();
+  titleInputs.value[index].focus();
+}
 </script>
 
 <template>
@@ -67,7 +75,7 @@ const htmlContainer = ref<HTMLElement[]>([]);
     @dblclick.self="newNoteWithPosition($event)"
   >
     <VueDragResize
-      v-for="note in notes"
+      v-for="(note,index) in notes"
       :key="note.ts"
       :x="note.position.left"
       :y="note.position.top"
@@ -79,10 +87,22 @@ const htmlContainer = ref<HTMLElement[]>([]);
       @resizestop="onDragstop($event, note)"
       @mousedown="changeIndex(note)"
     >
-      <div
-        class="drag w-full bg-light-800 flex justify-between p-1"
-      >
-        <div class="" />
+      <div class="header w-full bg-light-800 flex justify-between p-1">
+        <div
+          class="drag flex-1 text-left select-none overflow-hidden text-ellipsis"
+          @dblclick="startEditingTitle(note,index)"
+        >
+          <input
+            v-show="note.editMode"
+            ref="titleInputs"
+            v-model="note.title"
+            @blur="note.editMode = false"
+          >
+          <span
+            v-show="!note.editMode"
+            class="drag"
+          >{{ note.title }}</span>
+        </div>
         <div
           class="i-mdi:close cursor-pointer delete-note"
           @click="deleteNote(note)"
@@ -113,7 +133,7 @@ const htmlContainer = ref<HTMLElement[]>([]);
   height: 100%;
 }
 
-.drag {
+.header {
   .delete-note {
     visibility: hidden;
   }
