@@ -61,8 +61,8 @@ const keyPressed = computed(()=> meta.value && shift.value)
 const textarea = ref<HTMLElement[]>([]);
 const htmlContainer = ref<HTMLElement[]>([]);
 
-const titleInputs = ref<HTMLElement[]>([]);
-const startEditingTitle = async (note:Note,index:number):Promise<void> => {
+const titleInputs = ref<(HTMLElement)[]>([]);
+const startEditingTitle = async (note:Note, index:number):Promise<void> => {
   note.editMode = true;
   await nextTick();
   titleInputs.value[index].focus();
@@ -93,13 +93,14 @@ const startEditingTitle = async (note:Note,index:number):Promise<void> => {
           @dblclick="startEditingTitle(note,index)"
         >
           <input
-            v-show="note.editMode"
-            ref="titleInputs"
+            v-if="note.editMode"
+            :ref="(el)=>{titleInputs[index] = el as HTMLElement}"
             v-model="note.title"
+            class="w-full"
             @blur="note.editMode = false"
           >
           <span
-            v-show="!note.editMode"
+            v-else
             class="drag"
           >{{ note.title }}</span>
         </div>
