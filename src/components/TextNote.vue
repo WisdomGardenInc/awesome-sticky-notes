@@ -33,7 +33,7 @@ const keyPressed = computed(()=> meta.value && shift.value)
 <template>
   <div class="header w-full bg-light-800 flex justify-between items-center p-1">
     <div
-      class="drag flex-1 text-left select-none overflow-hidden text-ellipsis"
+      class="drag flex-1 text-left select-none overflow-hidden text-ellipsis h-full"
       @dblclick="startEditingTitle"
     >
       <input
