@@ -9,11 +9,7 @@ const emit = defineEmits(['update:modelValue', 'delete'])
 
 const titleInput = ref<HTMLElement|null>(null);
 
-
-const note = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
+const note = computed(()=>props.modelValue);
 
 const startEditingTitle = async ():Promise<void> => {
   note.value.editMode = true;
@@ -31,23 +27,25 @@ const keyPressed = computed(()=> meta.value && shift.value)
 </script>
 
 <template>
-  <div class="header w-full bg-light-800 flex justify-between items-center p-1">
+  <div class="header w-full bg-light-800 flex justify-between items-center px-1">
     <div
-      class="drag flex-1 text-left select-none overflow-hidden text-ellipsis h-full"
+      class="drag flex-1 text-left select-none overflow-hidden text-ellipsis h-full py-1"
       @dblclick="startEditingTitle"
     >
       <input
-        v-show="note.editMode"
+        v-if="note.editMode"
         ref="titleInput"
         v-model="note.title"
-        class="w-full"
+        class="w-full min-h-5"
         @blur="note.editMode = false"
         @keydown.enter="note.editMode = false"
       >
-      <span
-        v-show="!note.editMode"
-        class="drag"
-      >{{ note.title }}</span>
+      <div
+        v-else
+        class="pointer-events-none min-h-5"
+      >
+        {{ note.title }}
+      </div>
     </div>
     <div
       class="i-mdi:close cursor-pointer delete-note"
