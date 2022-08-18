@@ -15,6 +15,28 @@ export default defineConfig({
         presetWind()
       ]
     }),
-    VitePWA({ registerType: 'autoUpdate' })
+    VitePWA({
+      devOptions: {
+        enabled: true
+      },
+      registerType: 'autoUpdate', manifest: {
+        name: 'Awesome sticky notes',
+        short_name: 'Sticky notes',
+        description: 'PWA for Awesome sticky notes',
+        theme_color: '#ffffff',
+        icons: [
+          {
+            src: 'src/assets/pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'src/assets/pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
+      }
+    })
   ]
 })
