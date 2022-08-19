@@ -5,7 +5,7 @@ import { useLocalStorage } from "@vueuse/core";
 import VueDragResize from "vue-drag-resize-2";
 import TextNote from "./components/TextNote.vue"
 import { Note, Position } from "./types";
-
+import { useIntro } from "./hooks/useIntro";
 
 const notes = ref<Note[]>([new Note()]);
 
@@ -31,6 +31,8 @@ const changeIndex = (note: Note) => {
 };
 
 useLocalStorage("notes", notes);
+
+useIntro()
 </script>
 
 <template>
@@ -46,7 +48,7 @@ useLocalStorage("notes", notes);
       :w="note.position.width"
       :h="note.position.height"
       drag-handle=".drag"
-      class="bg-yellow-200 border border-amber"
+      class="bg-yellow-200 border border-amber note"
       @dragstop="onDragstop($event, note)"
       @resizestop="onDragstop($event, note)"
       @mousedown="changeIndex(note)"
