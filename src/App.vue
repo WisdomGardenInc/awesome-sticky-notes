@@ -1,26 +1,11 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useLocalStorage } from "@vueuse/core";
-import { useKeyModifier } from '@vueuse/core'
 //@ts-expect-error no type
 import VueDragResize from "vue-drag-resize-2";
-import { computed } from "vue";
-
-interface Position {
-  left: number; //the X position of the component
-  top: number; //the Y position of the component
-  width: number; //the width of the component
-  height: number; //the height of the component
-}
-
-class Note {
-  public content = "";
-  public ts = 0;
-  public position: Position = { left: 50, top: 50, width: 200, height: 200 };
-  constructor() {
-    this.ts = new Date().getTime();
-  }
-}
+import TextNote from "./components/TextNote.vue"
+import { Note, Position } from "./types";
+import { useIntro } from "./hooks/useIntro";
 
 const notes = ref<Note[]>([new Note()]);
 
@@ -47,18 +32,7 @@ const changeIndex = (note: Note) => {
 
 useLocalStorage("notes", notes);
 
-const getHtml = (note: Note) => {
-  return note.content.replaceAll('<', '&lt;').replace(/(https?:\/\/[^\s'"]+)/g, "<a target='_blank' href='$1'>$1</a>")
-}
-
-
-const meta = useKeyModifier('Meta')
-const shift = useKeyModifier('Shift')
-const keyPressed = computed(()=> meta.value && shift.value)
-
-const textarea = ref<HTMLElement[]>([]);
-const htmlContainer = ref<HTMLElement[]>([]);
-
+useIntro()
 </script>
 
 <template>
@@ -67,91 +41,34 @@ const htmlContainer = ref<HTMLElement[]>([]);
     @dblclick.self="newNoteWithPosition($event)"
   >
     <VueDragResize
-      v-for="note in notes"
+      v-for="(note, index) in notes"
       :key="note.ts"
       :x="note.position.left"
       :y="note.position.top"
       :w="note.position.width"
       :h="note.position.height"
       drag-handle=".drag"
-      class="bg-yellow-200 border border-amber"
+      class="bg-yellow-200 border border-amber note"
       @dragstop="onDragstop($event, note)"
       @resizestop="onDragstop($event, note)"
       @mousedown="changeIndex(note)"
     >
-      <div
-        class="drag w-full bg-light-800 flex justify-between p-1"
-      >
-        <div class="" />
-        <div
-          class="i-mdi:close cursor-pointer delete-note"
-          @click="deleteNote(note)"
-        />
-      </div>
-      <div
-        v-show="keyPressed"
-        ref="htmlContainer"
-        class="htmlContainer"
-        v-html="getHtml(note)"
-      />
-      <textarea
-        v-show="!keyPressed"
-        ref="textarea"
-        v-model="note.content"
-        class="w-full h-full"
+      <TextNote
+        v-model="notes[index]"
+        @delete="deleteNote(notes[index])"
       />
     </VueDragResize>
   </div>
 </template>
 
 <style scoped lang="scss">
-* {
-  box-sizing: border-box;
-}
-
 .bg {
   height: 100%;
-}
-
-.drag {
-  .delete-note {
-    visibility: hidden;
-  }
-
-  &:hover {
-    .delete-note {
-      visibility: visible;
-    }
-  }
-}
-
-.htmlContainer {
-  text-align: left;
-  white-space: pre-wrap;
-  line-height: 1;
-  font-size: 14px;
-  word-break: break-word;
-  width: 100%;
-  font-weight: 400;
-  overflow-y: auto;
-  padding: 2px;
-  color: #000;
-}
-
-textarea {
-  border: none;
-  background: transparent;
-  resize: none;
-  line-height: 1;
-  font-size: 14px;
-  font-weight: 400;
-  white-space: pre-wrap;
-  font-family: inherit;
-  color: #000;
 }
 
 :deep(.content-container) {
   display: flex;
   flex-direction: column;
 }
+
 </style>
