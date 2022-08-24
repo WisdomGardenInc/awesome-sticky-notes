@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { useKeyModifier } from '@vueuse/core';
-import { computed } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { nextTick, ref } from 'vue'
 import { Note } from '../types';
 
 const props = defineProps<{ modelValue: Note }>()
 const emit = defineEmits(['update:modelValue', 'delete'])
 
-const titleInput = ref<HTMLElement|null>(null);
+const titleInput = ref<HTMLElement | null>(null);
 
-const note = computed(()=>props.modelValue);
+const note = computed(() => props.modelValue);
 
-const startEditingTitle = async ():Promise<void> => {
+const startEditingTitle = async (): Promise<void> => {
   note.value.editMode = true;
   await nextTick();
   titleInput.value!.focus();
@@ -23,7 +23,22 @@ const getHtml = (note: Note) => {
 
 const meta = useKeyModifier('Meta')
 const shift = useKeyModifier('Shift')
-const keyPressed = computed(()=> meta.value && shift.value)
+const keyPressed = computed(() => meta.value && shift.value)
+
+
+const htmlPreviewer = ref<HTMLElement | null>(null);
+const textarea = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+  watch(keyPressed, () => {
+    if (keyPressed.value) {
+      const scrollTop = textarea.value!.scrollTop;
+      nextTick(() => {
+        htmlPreviewer.value!.scrollTop = scrollTop;
+      })
+    }
+  })
+})
 </script>
 
 <template>
@@ -54,8 +69,8 @@ const keyPressed = computed(()=> meta.value && shift.value)
   </div>
   <div
     v-show="keyPressed"
-    ref="htmlContainer"
-    class="htmlContainer"
+    ref="htmlPreviewer"
+    class="htmlPreviewer"
     v-html="getHtml(note)"
   />
   <textarea
@@ -79,7 +94,7 @@ const keyPressed = computed(()=> meta.value && shift.value)
   }
 }
 
-.htmlContainer {
+.htmlPreviewer {
   text-align: left;
   white-space: pre-wrap;
   line-height: 1;
