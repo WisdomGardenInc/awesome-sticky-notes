@@ -4,6 +4,7 @@ import { useLocalStorage } from "@vueuse/core";
 //@ts-expect-error no type
 import VueDragResize from "vue-drag-resize-2";
 import TextNote from "./components/TextNote.vue"
+import IframeNote from "./components/IframeNote.vue"
 import { Note, Position } from "./types";
 import { useIntro } from "./hooks/useIntro";
 
@@ -20,6 +21,7 @@ const onDragstop = (position: Position, note: Note) => {
 
 const newNoteWithPosition = (e: MouseEvent) => {
   const note = new Note()
+  note.type = 'iframe'
   note.position = { left: e.x, top: e.y, width: 200, height: 200 }
   notes.value.push(note);
 }
@@ -30,9 +32,14 @@ const changeIndex = (note: Note) => {
   notes.value.push(note)
 };
 
-useLocalStorage("notes", notes);
+useLocalStorage("notes-v1", notes);
 
 useIntro()
+
+const textTypeMap : Record<string, any> = {
+  'text': TextNote,
+  'iframe': IframeNote
+}
 </script>
 
 <template>
@@ -53,7 +60,8 @@ useIntro()
       @resizestop="onDragstop($event, note)"
       @mousedown="changeIndex(note)"
     >
-      <TextNote
+      <component
+        :is="textTypeMap[note.type]"
         v-model="notes[index]"
         @delete="deleteNote(notes[index])"
       />

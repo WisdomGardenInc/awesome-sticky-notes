@@ -11,6 +11,7 @@ export class Note {
   public position: Position = { left: 50, top: 50, width: 200, height: 200 };
   public title = "";
   public editMode = false;
+  public type = 'text';
   constructor() {
     this.ts = new Date().getTime();
   }
