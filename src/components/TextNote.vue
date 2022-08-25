@@ -22,8 +22,17 @@ const getHtml = (note: Note) => {
 }
 
 const meta = useKeyModifier('Meta')
+const ctrl = useKeyModifier('Control')
 const shift = useKeyModifier('Shift')
-const keyPressed = computed(() => meta.value && shift.value)
+
+const isMac = navigator.userAgent.includes('Mac')
+const keyPressed = computed(() => {
+  if (isMac) {
+    return meta.value && shift.value
+  } else {
+    return ctrl.value && shift.value
+  }
+})
 
 
 const htmlPreviewer = ref<HTMLElement | null>(null);

@@ -19,6 +19,11 @@ export const useIntro = () => {
           intro: "记录任何你想记录的内容!",
         },
         {
+          element: '.note:first-of-type',
+          title: "快捷打开链接",
+          intro: "按下ctrl(cmd)+shift高亮链接",
+        },
+        {
           intro: "Have Fun!",
         },
       ],
@@ -26,7 +31,7 @@ export const useIntro = () => {
   };
 
   const endIntro = ref<boolean>(false);
-  useLocalStorage("endIntro", endIntro);
+  useLocalStorage("endIntro-v1", endIntro);
 
   const completeIntro = () => {
     endIntro.value = true;
