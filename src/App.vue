@@ -32,11 +32,19 @@ const changeIndex = (note: Note) => {
   notes.value.push(note)
 };
 
+const onResizing = ()=>{
+  document.body.classList.add('resizing')
+}
+const resizestop = (position: Position, note: Note)=> {
+  onDragstop(position, note)
+  document.body.classList.remove('resizing')
+}
+
 useLocalStorage("notes-v1", notes);
 
 useIntro()
 
-const textTypeMap : Record<string, any> = {
+const noteTypeMap : Record<string, any> = {
   'text': TextNote,
   'iframe': IframeNote
 }
@@ -57,11 +65,12 @@ const textTypeMap : Record<string, any> = {
       drag-handle=".drag"
       class="bg-yellow-200 border border-amber note"
       @dragstop="onDragstop($event, note)"
-      @resizestop="onDragstop($event, note)"
+      @resizestop="resizestop($event, note)"
+      @resizing="onResizing"
       @mousedown="changeIndex(note)"
     >
       <component
-        :is="textTypeMap[note.type]"
+        :is="noteTypeMap[note.type]"
         v-model="notes[index]"
         @delete="deleteNote(notes[index])"
       />

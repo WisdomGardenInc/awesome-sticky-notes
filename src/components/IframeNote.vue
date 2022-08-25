@@ -93,4 +93,10 @@ const switchMode = ()=> {
     height: 100%;
   }
 }
+
+:global(body.resizing) {
+  iframe {
+    pointer-events: none;
+  }
+}
 </style>
