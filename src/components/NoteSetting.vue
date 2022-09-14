@@ -5,24 +5,40 @@ import { computed, ref, CSSProperties } from "vue";
 const status = ref(false);
 const size = ref(1);
 
-const colorRange = ["red", "orange", "yellow", "green", "blue", "cyan", "fuchsia", "purple", "gray", "gainsboro"];
+const colorRange: string[] = [
+  "#F8CDD3",
+  "#F59EBA",
+  "#C25493",
+  "#F05568",
+  "#F43993",
+  "#ED4328",
+  "#FCC53A",
+  "#FCE029",
+  "#FAF8BA",
+  "#D7EE34",
+  "#C6DC3D",
+  "#0EC1B8",
+  "#1C79C5",
+  "#6498E3",
+  "#BDD3EB",
+];
 
-const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
+const { isRevealed, reveal, confirm } = useConfirmDialog();
 
 const props = defineProps<{ content: string; modelValue: CSSProperties }>();
 
 const style = computed(() => props.modelValue);
 
 const open = () => {
-  Array.from(document.getElementsByClassName("page")).forEach(function (item) {
-    item.classList.add("rotate");
+  document.querySelectorAll<HTMLInputElement>(".page").forEach((item, index) => {
+    item.style.transform = `rotate(${72 + index * 12}deg)`;
   });
   status.value = true;
 };
 
 const close = () => {
-  Array.from(document.getElementsByClassName("page")).forEach(function (item) {
-    item.classList.remove("rotate");
+  document.querySelectorAll<HTMLInputElement>(".page").forEach(function (item) {
+    item.style.transform = "none";
   });
   status.value = false;
 };
@@ -31,9 +47,8 @@ const changeBgColor = () => {
   return status.value ? close() : open();
 };
 
-const selectBgColor = (index: number) => {
-  console.log(index);
-  style.value.backgroundColor = colorRange[index - 1];
+const selectBgColor = (color: string) => {
+  style.value.backgroundColor = color;
   close();
 };
 </script>
@@ -46,7 +61,7 @@ const selectBgColor = (index: number) => {
       <header class="h-10 flex justify-end items-center px-2 gap-x-1">
         <!-- <button @click="confirm">Save</button>
         <button @click="cancel">Cancel</button> -->
-        <div class="i-mdi:close-circle-outline h-8 w-8 text-white" @click="confirm"></div>
+        <div class="i-mdi:close-circle-outline h-8 w-8 text-white" @click="confirm" />
       </header>
       <!-- 预览区 -->
       <main class="flex justify-center items-center">
@@ -61,14 +76,13 @@ const selectBgColor = (index: number) => {
       </footer>
       <div class="box fixed bottom-0">
         <div
-          v-for="index in 10"
+          v-for="(color, index) in colorRange"
           :key="index"
           class="page"
-          :class="style.backgroundColor === colorRange[index - 1] ? 'selected' : ''"
-          @click="selectBgColor(index)"
-        >
-          {{ index }}
-        </div>
+          :class="style.backgroundColor === color ? 'selected' : ''"
+          :style="{ backgroundColor: color }"
+          @click="selectBgColor(color)"
+        />
       </div>
       <!-- <div>
         <input v-model="size" type="range" min="0.1" max="2" step="0.1" list="tickmarks" />
@@ -97,56 +111,6 @@ main {
   transform-origin: top right;
   transition: all 1s;
   position: absolute;
-}
-
-.box div.rotate:nth-child(1) {
-  background: red;
-  transform: rotate(72deg);
-}
-
-.box div.rotate:nth-child(2) {
-  background: orange;
-  transform: rotate(90deg);
-}
-
-.box div.rotate:nth-child(3) {
-  background: yellow;
-  transform: rotate(108deg);
-}
-
-.box div.rotate:nth-child(4) {
-  background: green;
-  transform: rotate(126deg);
-}
-
-.box div.rotate:nth-child(5) {
-  background: blue;
-  transform: rotate(144deg);
-}
-
-.box div.rotate:nth-child(6) {
-  background: cyan;
-  transform: rotate(162deg);
-}
-
-.box div.rotate:nth-child(7) {
-  background: fuchsia;
-  transform: rotate(180deg);
-}
-
-.box div.rotate:nth-child(8) {
-  background: purple;
-  transform: rotate(198deg);
-}
-
-.box div.rotate:nth-child(9) {
-  background: gray;
-  transform: rotate(216deg);
-}
-
-.box div.rotate:nth-child(10) {
-  background: gainsboro;
-  transform: rotate(234deg);
 }
 
 .box div.selected {
