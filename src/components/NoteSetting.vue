@@ -3,7 +3,7 @@ import { useConfirmDialog } from "@vueuse/core";
 import { computed, ref, CSSProperties } from "vue";
 
 const status = ref(false);
-const size = ref(1);
+const showFontSizeSelector = ref(false);
 
 const colorRange: string[] = [
   "#F8CDD3",
@@ -51,6 +51,15 @@ const selectBgColor = (color: string) => {
   style.value.backgroundColor = color;
   close();
 };
+
+const changeFontSize = () => {
+  return (showFontSizeSelector.value = !showFontSizeSelector.value);
+};
+
+const onChangeFontSize = (e: any) => {
+  style.value.fontSize = e.target.value;
+  showFontSizeSelector.value = false;
+};
 </script>
 
 <template>
@@ -70,9 +79,17 @@ const selectBgColor = (color: string) => {
         </div>
       </main>
       <!-- 操作区 -->
-      <footer class="w-full fixed bottom-0 h-20 flex justify-center items-center gap-x-60">
+      <footer class="w-full fixed bottom-0 h-20 flex justify-center items-center gap-x-25">
         <div class="i-mdi:file w-10 h-10" :style="{ color: style.backgroundColor }" @click="changeBgColor" />
-        <div class="i-mdi:format-text w-10 h-10 text-white" />
+        <div class="i-mdi:format-text w-10 h-10 text-white" @click="changeFontSize" v-if="!showFontSizeSelector" />
+        <select :value="style.fontSize" @change="onChangeFontSize($event)" v-if="showFontSizeSelector">
+          <option value="10px">特小</option>
+          <option value="12px">小</option>
+          <option value="14px">中</option>
+          <option value="16px">大</option>
+          <option value="20px">特大</option>
+        </select>
+        <div class="i-mdi:format-color-text w-10 h-10 text-black" />
       </footer>
       <div class="box fixed bottom-0">
         <div
@@ -84,16 +101,6 @@ const selectBgColor = (color: string) => {
           @click="selectBgColor(color)"
         />
       </div>
-      <!-- <div>
-        <input v-model="size" type="range" min="0.1" max="2" step="0.1" list="tickmarks" />
-        <datalist id="tickmarks">
-          <option value="1.1" label="特小"></option>
-          <option value="1.2" label="小"></option>
-          <option value="1.3" label="中"></option>
-          <option value="1.4" label="大"></option>
-          <option value="1.5" label="特大"></option>
-        </datalist>
-      </div> -->
     </div>
   </teleport>
 </template>
@@ -102,18 +109,18 @@ main {
   height: calc(100% - 7.5rem);
 }
 .box {
-  left: calc(50% - 200px);
+  left: calc(50% - 160px);
 }
 .box div {
-  width: 200px;
-  height: 200px;
-  background-color: gainsboro;
+  width: 160px;
+  height: 160px;
+  background-color: #bdd3eb;
   transform-origin: top right;
   transition: all 1s;
   position: absolute;
 }
 
 .box div.selected {
-  border: 2px solid white;
+  border: 2px solid #ffffff;
 }
 </style>
