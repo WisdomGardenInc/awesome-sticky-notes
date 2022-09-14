@@ -52,6 +52,11 @@ const selectBgColor = (color: string) => {
   close();
 };
 
+const selectColor = (color: string) => {
+  style.value.color = color;
+  console.log(color);
+};
+
 const changeFontSize = () => {
   return (showFontSizeSelector.value = !showFontSizeSelector.value);
 };
@@ -90,6 +95,16 @@ const onChangeFontSize = (e: any) => {
           <option value="20px">特大</option>
         </select>
         <div class="i-mdi:format-color-text w-10 h-10 text-black" />
+        <div class="flex items-center gap-x-3">
+          <div
+            v-for="(color, index) in colorRange"
+            :key="index"
+            class="circle"
+            :class="style.color === color ? 'selected' : ''"
+            :style="{ backgroundColor: color }"
+            @click="selectColor(color)"
+          />
+        </div>
       </footer>
       <div class="box fixed bottom-0">
         <div
@@ -118,6 +133,18 @@ main {
   transform-origin: top right;
   transition: all 1s;
   position: absolute;
+}
+
+.circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+
+  &.selected {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ffffff;
+  }
 }
 
 .box div.selected {
