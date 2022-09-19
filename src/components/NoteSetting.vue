@@ -199,9 +199,13 @@ main {
     height: 80px;
     font-weight: 500;
     background-color: #ffffff;
-    border-radius: 10px;
+    // border-radius: 10px;
+    cursor: pointer;
     position: absolute;
     transition: all 1s;
+    &:hover, &.selected {
+      background-color: yellow;
+    }
   }
 }
 
